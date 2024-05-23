@@ -5,6 +5,12 @@ const { default: axios } = require("axios");
 const { Telegraf } = require("telegraf");
 const handleError = require("./handleError");
 const bot = new Telegraf(process.env.BOT_TOKEN);
+const Queue = require("queue-promise");
+// Create a queue instance
+const queue = new Queue({
+  concurrent: 25, // Process one request at a time
+  interval: 3000, // Interval between dequeue operations (1 second)
+});
 
 const connection = new Connection(process.env.RPC_ENDPOINT);
 
@@ -73,12 +79,14 @@ const listenForPayments = async () => {
                 { walletAddress: senderAddress },
                 { balance: newBalance }
               );
+             queue.enqueue(async()=>{
               await bot.telegram.sendMessage(
                 sender.chatId,
                 `Deposit confirmed ✅\nAmount: ${amount} sol\n$${parseFloat(
                   creditAmount.toFixed(2)
                 )}\nNew Balance: $${newBalance}`
               );
+             })
             }
           }
         }
