@@ -165,7 +165,6 @@ bot.on("message", async (ctx) => {
   });
 });
 
-// setInterval(()=>console.log(isSendingWalletAddress), 200)
 
 // SET THE BOT COMMANDS
 bot.telegram.setMyCommands([
@@ -202,31 +201,3 @@ mongoose
   .then(() => console.log("Connected to db"))
   .catch((error) => console.log(error));
 
-// const { Connection, PublicKey, LAMPORTS_PER_SOL } = require("@solana/web3.js");
-
-// // Replace with your Solana network connection endpoint (e.g., devnet, mainnet-beta)
-// const connection = new Connection("http://api.devnet.solana.com");
-
-// async function checkBalance() {
-//   try {
-//     console.log("Started checking");
-//     const balance = await connection.getBalance(
-//       new PublicKey("AWuFtxvfTjwvYUTAfnmGspAchF9Jjhswu6hHzgg3vVVU")
-//     );
-//     const solBalance = balance / LAMPORTS_PER_SOL; // Convert lamports to SOL
-//     console.log(`Wallet balance: ${solBalance} SOL`);
-//   } catch (error) {
-//     console.error(`Error getting balance: ${error}`);
-//   }
-//   // generateKey();
-// }
-
-// checkBalance();
-let key = [
-  98, 245, 202, 235, 213, 205, 62, 157, 196, 23, 1, 78, 75, 157, 166, 237, 36,
-  54, 63, 250, 177, 52, 52, 38, 89, 35, 45, 73, 159, 229, 67, 73, 177, 202, 172,
-  89, 91, 42, 141, 81, 31, 100, 191, 138, 108, 134, 90, 111, 16, 231, 60, 152,
-  180, 84, 159, 61, 22, 132, 22, 165, 9, 111, 216, 99,
-];
-
-// sendSol(0.01, key, "AWuFtxvfTjwvYUTAfnmGspAchF9Jjhswu6hHzgg3vVVU")
