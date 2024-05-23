@@ -195,7 +195,7 @@ app.listen(PORT, () => {
 });
 
 //LAUNCH THE BOT
-// bot.launch();
+bot.launch();
 
 //INIT PAYMENT LISTENER
 listenForPayments();
