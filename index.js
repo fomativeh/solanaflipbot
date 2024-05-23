@@ -183,6 +183,10 @@ bot.telegram.setMyCommands([
   },
 ]);
 
+app.get("/", (req, res)=>{
+  res.send("Hello world")
+})
+
 const PORT = process.env.PORT || 5000;
 //INITIATE SERVER LISTENER
 app.listen(PORT, () => {
