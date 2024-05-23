@@ -15,7 +15,7 @@ const createAccountIfNull = async (ctx) => {
 
     return userData;
   } catch (error) {
-    handleError(error);
+    handleError(ctx, error);
   }
 };
 

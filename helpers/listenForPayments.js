@@ -42,6 +42,8 @@ const listenForPayments = async () => {
           LAMPORTS_PER_SOL; // Convert to SOL units
         const senderAddress =
           transaction.transaction.message.accountKeys[1].toString();
+          const am = currentSolPriceInUsd * amount;
+          console.log(am," by ", senderAddress)
 
         //Check if transaction has been saved
         const allSignatures = await Signature.find();
@@ -83,7 +85,7 @@ const listenForPayments = async () => {
       }
     });
   } catch (error) {
-    handleError(error)
+    handleError(null, error)
   }
   }, interval);
 };
