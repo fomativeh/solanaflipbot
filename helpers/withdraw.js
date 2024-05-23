@@ -13,14 +13,14 @@ module.exports = withdraw = async (ctx, entryStatus) => {
         `Your balance is $0.\nPlease use the /deposit command to fund your account.`
       );
     }
-    
+
     const res = await axios.get("https://api.bitfinex.com/v1/pubticker/solusd");
     const currentSolPriceInUsd = res.data.last_price;
 
     const balanceInSol = balance / currentSolPriceInUsd;
     entryStatus.isWithdrawing = true;
 
-    const replyText = `You account balance is:\n*${balanceInSol} sol (${balance} usd)*
+    const replyText = `You account balance is:\n*$${balance}* (${balanceInSol} sol)
     
 Enter the amount you wish to withdraw (in usd):`;
 
