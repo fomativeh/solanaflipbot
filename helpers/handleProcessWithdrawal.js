@@ -27,7 +27,7 @@ module.exports = handleProcessWithdrawal = async (ctx, amountInUsd, entryStatus)
 
     const withdrawalAmountInSol = amountInUsd / currentSolPriceInUsd;
     await ctx.reply(
-      `Sending $${amountInUsd} (${withdrawalAmountInSol} sol) to your wallet address:\n${walletAddress}`
+      `Sending $${amountInUsd} (${withdrawalAmountInSol} sol) to your wallet address:\n\n${walletAddress}`
     );
 
     //Send sol to user
