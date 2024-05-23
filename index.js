@@ -20,6 +20,7 @@ const handleEndGame = require("./helpers/handleEndGame");
 const handleContinuePlaying = require("./helpers/handleContinuePlaying");
 const handleProcessWithdrawal = require("./helpers/handleProcessWithdrawal");
 const withdraw = require("./helpers/withdraw");
+const handleCreditNotification = require("./helpers/handleCreditNotification");
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -27,8 +28,8 @@ let entryStatus = { isSendingWalletAddress: false, addressChange: false, isWithd
 
 // Create a queue instance
 const queue = new Queue({
-  concurrent: 25, // Process one request at a time
-  interval: 3000, // Interval between dequeue operations (1 second)
+  concurrent: 25, // Process 25 requests at in 3 seconds
+  interval: 3000, // Interval between dequeue operations (3 seconds)
 });
 
 bot.start(async (ctx) => {
@@ -198,6 +199,9 @@ app.listen(PORT, () => {
 
 //INIT PAYMENT LISTENER
 listenForPayments();
+
+//INIT CREDIT NOTIFICATION LISTENER
+handleCreditNotification()//Checks for new credit alerts every 20 seconds
 
 //CONNECT THE SERVER TO THE DATABASE
 mongoose
