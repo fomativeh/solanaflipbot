@@ -7,6 +7,7 @@ const {
   SystemProgram,
   sendAndConfirmTransaction,
 } = require("@solana/web3.js");
+const bs58 = require("bs58");
 
 module.exports = sendSol = async (
   amountInSol,
@@ -20,10 +21,9 @@ module.exports = sendSol = async (
   const connection = new Connection(process.env.RPC_ENDPOINT);
 
   try {
-    const encoder = new TextEncoder();
-    const secretKeyUint8Array = encoder.encode(secretKeyString);
-    const from = Keypair.fromSecretKey(new Uint8Array(secretKeyUint8Array));
-
+    const secretKeyUint8Array = bs58.decode(secretKeyString);
+    const from = Keypair.fromSecretKey(secretKeyUint8Array);
+    
     const amount = amountInSol * LAMPORTS_PER_SOL;
     const transaction = new Transaction().add(
       SystemProgram.transfer({

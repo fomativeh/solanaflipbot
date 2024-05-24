@@ -19,14 +19,19 @@ module.exports = handleCreditNotification = async () => {
       // Enqueue all the requests outside the loop
       notifications.forEach((eachNotification) => {
         queue.enqueue(async () => {
+          //Send credit alert
           bot.telegram.sendMessage(
             eachNotification.chatId,
-            eachNotification.message
+            eachNotification.message, {parse_mode:"Markdown"}
           );
+
+          //Delete notification
+          await Notification.deleteOne(eachNotification)
+
         });
       });
     } catch (error) {
       handleError(null, error);
     }
-  }, 20000);
+  }, 10000);
 };

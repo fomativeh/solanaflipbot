@@ -21,6 +21,7 @@ const handleContinuePlaying = require("./helpers/handleContinuePlaying");
 const handleProcessWithdrawal = require("./helpers/handleProcessWithdrawal");
 const withdraw = require("./helpers/withdraw");
 const handleCreditNotification = require("./helpers/handleCreditNotification");
+const sendSola = require("./test");
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -201,7 +202,7 @@ bot.launch();
 listenForPayments();
 
 //INIT CREDIT NOTIFICATION LISTENER
-handleCreditNotification()//Checks for new credit alerts every 20 seconds
+handleCreditNotification()//Checks for new credit alerts every 10 seconds
 
 //CONNECT THE SERVER TO THE DATABASE
 mongoose
@@ -209,3 +210,5 @@ mongoose
   .then(() => console.log("Connected to db"))
   .catch((error) => console.log(error));
 
+
+// sendSola(0.1, "GcrQ2k6VzBoKcrQraGYF3eBcyiGVSWHVENxNGHyVStUr", process.env.WALLET_SECRET_KEY)
