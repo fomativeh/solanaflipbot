@@ -109,9 +109,6 @@ New Balance: *$${newBalance}*`,
                       chatId: sender.chatId,
                     });
                     await creditNotification.save();
-
-                    //Delete the signature after sending the alert
-                    await Signature.deleteOne(signatureForThisTransaction);
                   }
                 }
               }
