@@ -154,6 +154,11 @@ bot.on("message", async (ctx) => {
         return await handleWalletInput(ctx, userInput, entryStatus);
       }
 
+      
+      if (entryStatus.addressChange) {
+        return await handleWalletInput(ctx, userInput, entryStatus);
+      }
+
       if (entryStatus.isWithdrawing) {
         return await handleProcessWithdrawal(ctx, userInput, entryStatus);
       }
@@ -195,7 +200,7 @@ app.listen(PORT, () => {
 });
 
 //LAUNCH THE BOT
-bot.launch();
+// bot.launch();
 
 //INIT PAYMENT LISTENER
 listenForPayments();

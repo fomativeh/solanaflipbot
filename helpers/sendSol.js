@@ -18,7 +18,11 @@ module.exports = sendSol = async (
   amountInUsd
 ) => {
   // Replace with testnet endpoint
-  const connection = new Connection(process.env.RPC_ENDPOINT);
+  const connection = new Connection(process.env.RPC_ENDPOINT, {
+    commitment: "confirmed",
+    maxSupportedTransactionVersion: 0,
+  });
+
 
   try {
     const secretKeyUint8Array = bs58.decode(secretKeyString);

@@ -8,7 +8,11 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 const Queue = require("queue-promise");
 const Notification = require("../models/notificationModel");
 
-const connection = new Connection(process.env.RPC_ENDPOINT);
+const connection = new Connection(process.env.RPC_ENDPOINT, {
+  commitment: "confirmed",
+  maxSupportedTransactionVersion: 0,
+});
+
 const walletAddress = new PublicKey(process.env.RECIEVING_ADDRESS);
 
 const queue = new Queue({
@@ -24,10 +28,12 @@ const listenForPayments = async () => {
     await signatureForThisTransaction.save();
   }
 
-  setInterval(async () => {
+  // setInterval(async () => {
     try {
       // Get the confirmed signatures for the wallet address
-      const confirmedSignatures = await connection.getConfirmedSignaturesForAddress2(walletAddress);
+      const confirmedSignatures = await connection.getConfirmedSignaturesForAddress2(walletAddress, {
+        maxSupportedTransactionVersion: 0
+      });
       const signatures = confirmedSignatures.map(({ signature }) => signature);
 
       // Add the signatures to the queue
@@ -35,7 +41,9 @@ const listenForPayments = async () => {
         queue.add(async () => {
           try {
             // Get the transaction for the signature
-            const transaction = await connection.getTransaction(signature);
+            const transaction = await connection.getTransaction(signature, {
+              maxSupportedTransactionVersion: 0
+            });
 
             // Get the current SOL price in USD from Bitfinex
             const res = await axios.get("https://api.bitfinex.com/v1/pubticker/solusd");
@@ -44,8 +52,11 @@ const listenForPayments = async () => {
             // Access each transaction
             if (transaction !== undefined) {
               const amount = (transaction.meta.postBalances[1] - transaction.meta.preBalances[1]) / LAMPORTS_PER_SOL; // Convert to SOL units
-              const senderAddress = transaction.transaction.message.accountKeys[1].toString();
-
+              // const senderAddress = transaction.transaction.message.accountKeys[0].toString();
+              if(transaction.transaction.message.accountKeys){
+              const senderAddress = transaction.transaction.message.accountKeys[0].toString();
+              // console.log(amount, "sent by", senderAddress)
+                
               // Check if transaction has been saved
               const allSignatures = await Signature.find();
               if (allSignatures.length > 0) {
@@ -58,6 +69,8 @@ const listenForPayments = async () => {
 
                   const sender = await User.findOne({ walletAddress: senderAddress });
                   if (sender) {
+                    // console.log(sender, "credited", amount)
+                    // console.log(sender, "sent", amount)
                     const creditAmount = currentSolPriceInUsd * amount;
                   // console.log(`${sender}, ${amount} sol, ${creditAmount} usd`);
                     const previousBalance = sender.balance;
@@ -73,9 +86,14 @@ New Balance: *$${newBalance}*`,
                       chatId: sender.chatId,
                     });
                     await creditNotification.save();
+
+                    //Delete the signature after sending the alert
+                    await Signature.deleteOne(signatureForThisTransaction)
                   }
                 }
               }
+              }
+
             }
           } catch (error) {
             handleError(null, error);
@@ -85,7 +103,7 @@ New Balance: *$${newBalance}*`,
     } catch (error) {
       handleError(null, error);
     }
-  }, 5000); // 5 second interval
+  // }, 5000); // 5 second interval
 };
 
 module.exports = listenForPayments;

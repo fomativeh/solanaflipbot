@@ -16,7 +16,7 @@ module.exports = handleWalletInput = async (
     }
 
     const walletExists = await User.findOne({ walletAddress });
-    if (walletExists) {
+    if (walletExists && !entryStatus.addressChange) {
       return await ctx.reply(
         "An account already exists with that sender wallet address.\nIf it is yours, please use that telegram account to start the bot."
       );
