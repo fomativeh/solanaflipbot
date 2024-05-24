@@ -29,8 +29,8 @@ module.exports = handleContinuePlaying = async (ctx) => {
     await userData.save();
 
     //FLIP COIN
-    ctx.reply("Game Started 🎮");
-    ctx.reply("Flipping coin 🪙🪙🪙");
+    const msg1 = await ctx.reply("Game Started 🎮");
+    const msg2 = await ctx.reply("Flipping coin 🪙🪙🪙");
     const flipResult = flipCoin();
 
     if (flipResult == "TAIL") {
@@ -45,10 +45,15 @@ module.exports = handleContinuePlaying = async (ctx) => {
         },
       };
 
-      return await ctx.reply(
+      await ctx.reply(
         `FLIP RESULT: TAIL ❌\nYou lose $5☹️\nNew Balance: *$${updatedBalance}*\nGame Ended`,
         { ...replyMarkup, parse_mode: "Markdown" }
       );
+
+      return setTimeout(async () => {
+        await ctx.deleteMessage(msg1.message_id);
+        await ctx.deleteMessage(msg2.message_id);
+      }, 1200);
     }
 
     //HANDLE WIN CASE
@@ -60,11 +65,14 @@ module.exports = handleContinuePlaying = async (ctx) => {
       userData.balance = newBalance;
       await userData.save();
 
-      return await ctx.reply(
+      await ctx.reply(
         `FLIP RESULT: HEAD ✅\n10 in a row🎖️You win $1,000 Jackpot😎\nNew Balance: $${newBalance}\nGame Ended✨`
       );
+      return setTimeout(async () => {
+        await ctx.deleteMessage(msg1.message_id);
+        await ctx.deleteMessage(msg2.message_id);
+      }, 1200);
     }
-
 
     //HANDLE NORMAL HEAD WIN
     userData.currentGame = { heads: lastHeadCount + 1 };
@@ -72,7 +80,7 @@ module.exports = handleContinuePlaying = async (ctx) => {
     userData.balance = newBalance;
     await userData.save();
 
-    ctx.reply(
+    await ctx.reply(
       `FLIP RESULT: HEAD ✅\nYou win $9😎\nNew Balance: $${newBalance}`,
       {
         reply_markup: {
@@ -83,6 +91,10 @@ module.exports = handleContinuePlaying = async (ctx) => {
         },
       }
     );
+   return setTimeout(async () => {
+      await ctx.deleteMessage(msg1.message_id);
+      await ctx.deleteMessage(msg2.message_id);
+    }, 1200);
   } catch (error) {
     handleError(ctx, error);
   }

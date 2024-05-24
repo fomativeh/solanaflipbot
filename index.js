@@ -47,6 +47,7 @@ bot.start(async (ctx) => {
 //HANDLE BALANCE REQUESTS
 bot.action("balance", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await showBalance(ctx);
   });
 });
@@ -60,6 +61,7 @@ bot.command("balance", async (ctx) => {
 //HANDLE DEPOSIT REQUESTS
 bot.action("deposit", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await deposit(ctx, entryStatus);
   });
 });
@@ -70,6 +72,13 @@ bot.command("deposit", async (ctx) => {
   });
 });
 
+bot.action("withdraw", async(ctx)=>{
+  queue.enqueue(async () => {
+    await ctx.deleteMessage();
+    await withdraw(ctx, entryStatus);
+  });
+})
+
 bot.command("withdraw", async(ctx)=>{
   queue.enqueue(async () => {
     await withdraw(ctx, entryStatus);
@@ -79,6 +88,7 @@ bot.command("withdraw", async(ctx)=>{
 //HANDLE NEW GAME REQUESTS
 bot.action("new_game", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await newGame(ctx);
   });
 });
@@ -107,6 +117,7 @@ bot.action("confirm-withdrawal", async (ctx) => {
 //HANDLE START-GAME BUTTON
 bot.action("start-game", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await handleStartGame(ctx);
   });
 });
@@ -114,6 +125,7 @@ bot.action("start-game", async (ctx) => {
 //HANDLE END-GAME BUTTON
 bot.action("end-game", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await handleEndGame(ctx);
   });
 });
@@ -121,6 +133,7 @@ bot.action("end-game", async (ctx) => {
 //HANDLE CONTINUE-PLAYING BUTTON
 bot.action("continue-playing", async (ctx) => {
   queue.enqueue(async () => {
+    await ctx.deleteMessage();
     await handleContinuePlaying(ctx)
   });
 });

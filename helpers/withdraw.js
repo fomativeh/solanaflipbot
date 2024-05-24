@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const User = require("../models/userModel");
 const handleError = require("./handleError");
 

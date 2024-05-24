@@ -1,7 +1,13 @@
+const { default: axios } = require("axios");
+const User = require("../models/userModel");
 const handleError = require("./handleError");
 const sendSol = require("./sendSol");
 
-module.exports = handleProcessWithdrawal = async (ctx, amountInUsd, entryStatus) => {
+module.exports = handleProcessWithdrawal = async (
+  ctx,
+  amountInUsd,
+  entryStatus
+) => {
   try {
     const { id } = ctx.from;
     const userData = await User.findOne({ chatId: id });
@@ -11,12 +17,14 @@ module.exports = handleProcessWithdrawal = async (ctx, amountInUsd, entryStatus)
     const res = await axios.get("https://api.bitfinex.com/v1/pubticker/solusd");
     const currentSolPriceInUsd = res.data.last_price;
 
-    if(isNaN(amountInUsd)){
+    if (isNaN(amountInUsd)) {
       return await ctx.reply("Please enter a valid amount to withdraw.");
     }
 
     if (amountInUsd == 0) {
-      return await ctx.reply("You can't withdraw $0, please enter a valid amount to withdraw.");
+      return await ctx.reply(
+        "You can't withdraw $0, please enter a valid amount to withdraw."
+      );
     }
 
     if (amountInUsd > balance) {
@@ -25,9 +33,8 @@ module.exports = handleProcessWithdrawal = async (ctx, amountInUsd, entryStatus)
       );
     }
 
-    const withdrawalAmountInSol = amountInUsd / currentSolPriceInUsd;
-    await ctx.reply(
-      `Sending $${amountInUsd} (${withdrawalAmountInSol} sol) to your wallet address:\n\n${walletAddress}`
+    const withdrawalAmountInSol = parseFloat(
+      amountInUsd / currentSolPriceInUsd
     );
 
     //Send sol to user
@@ -37,7 +44,8 @@ module.exports = handleProcessWithdrawal = async (ctx, amountInUsd, entryStatus)
       walletAddress,
       ctx,
       entryStatus,
-      amountInUsd
+      amountInUsd,
+      userData
     );
   } catch (error) {
     handleError(ctx, error);

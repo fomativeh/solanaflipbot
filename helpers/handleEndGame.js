@@ -6,8 +6,8 @@ module.exports = handleEndGame = async (ctx)=>{
         const userData = await User.findOne({chatId:ctx.from.id})
         userData.currentGame = {}
         await userData.save()
-        await ctx.editMessageText("Game Ended."); // Edit the message text
-        await ctx.editMessageReplyMarkup({ inline_keyboard: [] }); // Remove the inline keyboard
+        await ctx.reply("Game Ended ✨"); // Edit the message text
+        // await ctx.editMessageReplyMarkup({ inline_keyboard: [] }); // Remove the inline keyboard
     } catch (error) {
         handleError(ctx, error)
     }

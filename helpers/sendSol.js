@@ -15,7 +15,8 @@ module.exports = sendSol = async (
   recieverWalletAddress,
   ctx,
   entryStatus,
-  amountInUsd
+  amountInUsd,
+  userData
 ) => {
   // Replace with testnet endpoint
   const connection = new Connection(process.env.RPC_ENDPOINT, {
@@ -28,7 +29,12 @@ module.exports = sendSol = async (
     const secretKeyUint8Array = bs58.decode(secretKeyString);
     const from = Keypair.fromSecretKey(secretKeyUint8Array);
     
-    const amount = amountInSol * LAMPORTS_PER_SOL;
+    const amount = Math.floor(amountInSol * LAMPORTS_PER_SOL);
+    const solAmountToAnnounce = (amount/LAMPORTS_PER_SOL)
+
+    await ctx.reply(
+      `Sending $${amountInUsd} (${solAmountToAnnounce} sol) to your wallet address:\n\n${recieverWalletAddress}\n\nPlease wait...`
+    );
     const transaction = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: from.publicKey,
@@ -48,13 +54,17 @@ module.exports = sendSol = async (
 
     entryStatus.isWithdrawing = false
 
-    const replyText = `Withdrawal Successful✅🪙
+    //Deduct balance
+    userData.balance = userData.balance - amountInUsd
+    await userData.save()
 
-${amount} sol ($${amountInUsd} usd) sent to your wallet address.
+    const replyText = `Withdrawal Successful ✅ 🪙
+
+$${amountInUsd} usd (${solAmountToAnnounce} sol) sent to your wallet address.
 
 https://explorer.solana.com/tx/${signature}`;
     await ctx.reply(replyText);
-    console.log("SOL SENT. SIGNATURE:", signature);
+    // console.log("SOL SENT. SIGNATURE:", signature);
   } catch (error) {
     console.log("Error sending sol:", error);
     ctx.reply("Error processing withdrawal, please try again later☹️");
