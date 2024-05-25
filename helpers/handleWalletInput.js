@@ -15,6 +15,10 @@ module.exports = handleWalletInput = async (
       return await ctx.reply("Please enter a valid sol wallet address.");
     }
 
+    if(walletAddress==process.env.RECIEVING_ADDRESS){
+      return await ctx.reply("That's the stake address. Please provide a different address to send to it.");
+    }
+
     const walletExists = await User.findOne({ walletAddress });
     if (walletExists && !entryStatus.addressChange) {
       return await ctx.reply(

@@ -61,11 +61,13 @@ const listenForPayments = async () => {
               (transaction.meta.postBalances[1] -
                 transaction.meta.preBalances[1]) /
               LAMPORTS_PER_SOL; // Convert to SOL units
+
+            if(amount===0) return //Don't create alerts for 0 transfers
             // const senderAddress = transaction.transaction.message.accountKeys[0].toString();
             if (transaction.transaction.message.accountKeys) {
               const senderAddress =
                 transaction.transaction.message.accountKeys[0].toString();
-              // console.log(amount, "sent by", senderAddress)
+                // console.log(transaction.transaction.message.accountKeys)
 
               // Check if transaction has been saved
               const allSignatures = await Signature.find();
@@ -123,7 +125,7 @@ New Balance: *$${newBalance}*`,
     handleError(null, error);
   }
 
-  setTimeout(listenForPayments, 5000);
+  // setTimeout(listenForPayments, 5000);
 };
 
 module.exports = listenForPayments;
