@@ -125,7 +125,7 @@ New Balance: *$${newBalance}*`,
     handleError(null, error);
   }
 
-  // setTimeout(listenForPayments, 5000);
+  setTimeout(listenForPayments, 5000);
 };
 
 module.exports = listenForPayments;

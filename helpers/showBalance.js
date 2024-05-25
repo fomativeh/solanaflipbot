@@ -16,7 +16,7 @@ module.exports = showBalance = async (ctx) => {
       balance = userExists.balance;
     }
 
-    const replyText = `Your account balance is *$${balance}*`;
+    const replyText = `Your account balance is *$${balance.toFixed(2)}*`;
     const replyMarkup = {
       reply_markup: {
         inline_keyboard: [

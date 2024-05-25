@@ -55,7 +55,7 @@ module.exports = sendSol = async (
     entryStatus.isWithdrawing = false
 
     //Deduct balance
-    userData.balance = userData.balance - amountInUsd
+    userData.balance = parseFloat((userData.balance - amountInUsd).toFixed(2))
     await userData.save()
 
     const replyText = `Withdrawal Successful ✅ 🪙

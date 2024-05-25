@@ -34,7 +34,7 @@ module.exports = handleContinuePlaying = async (ctx) => {
     const flipResult = flipCoin();
 
     if (flipResult == "TAIL") {
-      //UPDATE USER ACCOUNT AND DEDUCT BALANCE IF THEY LOSE
+      //UPDATE USER ACCOUNT WHEN THEY LOSE
       userData.currentGame = {};
       await userData.save();
       const replyMarkup = {
@@ -61,7 +61,7 @@ module.exports = handleContinuePlaying = async (ctx) => {
     //HANDLE 10 ROW JACKPOT
     if (lastHeadCount == 9) {
       userData.currentGame = {};
-      const newBalance = parseFloat((balance + 1000).toFixed(2));
+      const newBalance = parseFloat((updatedBalance + 1000).toFixed(2));
       userData.balance = newBalance;
       await userData.save();
 
@@ -76,7 +76,7 @@ module.exports = handleContinuePlaying = async (ctx) => {
 
     //HANDLE NORMAL HEAD WIN
     userData.currentGame = { heads: lastHeadCount + 1 };
-    const newBalance = parseFloat((balance + 9).toFixed(2));
+    const newBalance = parseFloat((updatedBalance + 9).toFixed(2));
     userData.balance = newBalance;
     await userData.save();
 
@@ -91,7 +91,7 @@ module.exports = handleContinuePlaying = async (ctx) => {
         },
       }
     );
-   return setTimeout(async () => {
+    return setTimeout(async () => {
       await ctx.deleteMessage(msg1.message_id);
       await ctx.deleteMessage(msg2.message_id);
     }, 1200);

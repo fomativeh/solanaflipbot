@@ -42,7 +42,7 @@ module.exports = handleStartGame = async (ctx) => {
 
     //HANDLE WIN CASE
     userData.currentGame = { heads: 1 };
-    const newBalance = parseFloat((balance + 9).toFixed(2));
+    const newBalance = parseFloat((updatedBalance + 9).toFixed(2));
     userData.balance = newBalance
     await userData.save();
 
