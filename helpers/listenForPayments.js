@@ -21,6 +21,7 @@ const queue = new Queue({
 });
 
 const listenForPayments = async () => {
+  // console.log("Repeated")
   // Create a random signature so that the array of signatures will be present for looping
   const randomSignatureCreated = await Signature.findOne({
     signature: "randomSignature",
@@ -40,6 +41,7 @@ const listenForPayments = async () => {
       });
     const signatures = confirmedSignatures.map(({ signature }) => signature);
 
+    let count = 0
     // Add the signatures to the queue
     signatures.forEach((signature) => {
       queue.add(async () => {
@@ -57,6 +59,8 @@ const listenForPayments = async () => {
 
           // Access each transaction
           if (transaction !== undefined) {
+            // ++count;
+            // console.log(count)
             const amount =
               (transaction.meta.postBalances[1] -
                 transaction.meta.preBalances[1]) /
@@ -75,6 +79,9 @@ const listenForPayments = async () => {
                 const signatureExists = allSignatures.find(
                   (eachSignature) => eachSignature.signature == signature
                 );
+
+                // console.log(senderAddress, "credited", amount)
+
 
                 // Store transaction and credit user if it hasn't been saved in db
                 if (!signatureExists) {
@@ -125,7 +132,7 @@ New Balance: *$${newBalance}*`,
     handleError(null, error);
   }
 
-  setTimeout(listenForPayments, 5000);
+  // setTimeout(listenForPayments, 5000);
 };
 
 module.exports = listenForPayments;

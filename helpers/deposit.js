@@ -42,18 +42,24 @@ Your sender address:
 \`${walletAddress}\` (Send money with this address only)
 
 
-I will notify you upon payment confirmation.`;
+Click *Verify Deposit* after your payment, and i'll update your balance if deposit is comfirmed.`;
 
     return await ctx.reply(replyText, {
       reply_markup: {
         inline_keyboard: [
-          [{ text: "Change sender address", callback_data: "change-address" }],
+          [
+            { text: "Change sender address", callback_data: "change-address" },
+          ],
+          [
+            { text: "Verify Deposit", callback_data: "verify" },
+
+          ],
         ],
       },
       parse_mode: "Markdown",
     });
   } catch (error) {
     console.log(error);
-    handleError(ctx, error)
+    handleError(ctx, error);
   }
 };

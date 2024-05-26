@@ -21,6 +21,7 @@ const handleContinuePlaying = require("./helpers/handleContinuePlaying");
 const handleProcessWithdrawal = require("./helpers/handleProcessWithdrawal");
 const withdraw = require("./helpers/withdraw");
 const handleCreditNotification = require("./helpers/handleCreditNotification");
+const { default: axios } = require("axios");
 const app = express();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -138,6 +139,14 @@ bot.action("continue-playing", async (ctx) => {
   });
 });
 
+//HANDLE VERIFY-DEPOSIT BUTTON
+bot.action("verify", async (ctx) => {
+  queue.enqueue(async () => {
+    await ctx.reply("Checking your deposit ...👨‍💻\nI'll notify you upon confirmation.")
+    await listenForPayments()
+  });
+});
+
 //HANDLE CHANGE ADDRESS REQUEST
 bot.action("change-address", async (ctx) => {
   queue.enqueue(async () => {
@@ -216,7 +225,7 @@ app.listen(PORT, () => {
 bot.launch();
 
 //INIT PAYMENT LISTENER
-listenForPayments();
+// listenForPayments();
 
 //INIT CREDIT NOTIFICATION LISTENER
 handleCreditNotification()//Checks for new credit alerts every 10 seconds
@@ -226,3 +235,5 @@ mongoose
   .connect(process.env.URI)
   .then(() => console.log("Connected to db"))
   .catch((error) => console.log(error));
+
+

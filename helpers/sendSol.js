@@ -54,7 +54,7 @@ module.exports = sendSol = async (
 
     entryStatus.isWithdrawing = false
 
-    //Deduct balance
+    // Deduct balance
     userData.balance = parseFloat((userData.balance - amountInUsd).toFixed(2))
     await userData.save()
 
@@ -64,7 +64,7 @@ $${amountInUsd} usd (${solAmountToAnnounce} sol) sent to your wallet address.
 
 https://explorer.solana.com/tx/${signature}`;
     await ctx.reply(replyText);
-    // console.log("SOL SENT. SIGNATURE:", signature);
+    // console.log("SOL SENT. SIGNATURE:", `https://explorer.solana.com/tx/${signature}`);
   } catch (error) {
     console.log("Error sending sol:", error);
     ctx.reply("Error processing withdrawal, please try again later☹️");
