@@ -39,9 +39,9 @@ module.exports = showMenu = async (ctx, userExists) => {
 
     let replyText;
     if (userExists) {
-      replyText = `Welcome back, @${ctx.from.username}\nPick an option below:`;
+      replyText = `Welcome back, @${ctx.from.username}\nWin $1000 jackpot for 10 Heads in a row.\nPick an option below:`;
     } else {
-      replyText = `Welcome to Solana FlipBot.\nPick an option below:`;
+      replyText = `Welcome to Solana FlipBot.\nWin $1000 jackpot for 10 Heads in a row.\nPick an option below:`;
       //Create an account for new user
       const newUser = new User({
         chatId: ctx.from.id,
